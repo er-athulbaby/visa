@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Login;
 use App\Http\Middleware\RestrictAdminIp;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
@@ -29,11 +30,19 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->login(Login::class)
             ->brandName('BOC Visa Portal')
-            ->brandLogo(fn () => file_exists(public_path('images/boc-logo.png')) ? asset('images/boc-logo.png') : null)
+            ->darkMode(false)
+            ->font('Inter')
+            ->sidebarCollapsibleOnDesktop()
+            ->brandLogo(asset('images/boc-logo.png'))
+            ->brandLogoHeight('2.75rem')
+            ->favicon(asset('images/boc-logo.png'))
             ->colors([
-                'primary' => Color::Red,
+                'primary' => Color::hex('#C8102E'),
+                'gray' => Color::Neutral,
+                'indigo' => Color::Indigo,
             ])
             ->multiFactorAuthentication([
                 AppAuthentication::make()->recoverable(),

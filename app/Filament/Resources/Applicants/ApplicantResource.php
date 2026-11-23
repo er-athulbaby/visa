@@ -38,6 +38,23 @@ class ApplicantResource extends Resource
 
     protected static ?string $navigationLabel = 'Visa applications';
 
+    protected static ?int $navigationSort = 1;
+
+    public static function getNavigationBadge(): ?string
+    {
+        if (! static::canViewAny()) {
+            return null;
+        }
+        $n = Applicant::where('status', ApplicantStatus::Submitted->value)->count();
+
+        return $n ? (string) $n : null;
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Submitted applications waiting for review';
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
