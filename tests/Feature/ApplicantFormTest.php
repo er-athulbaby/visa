@@ -176,3 +176,9 @@ it('skips OCR for a PDF passport', function () {
         ->set('passportScan', UploadedFile::fake()->create('passport.pdf', 100, 'application/pdf'))
         ->assertSet('ocrMessage', 'PDF uploaded. Please fill in the details.');
 });
+
+it('does not let the client write ocrRaw', function () {
+    Livewire::actingAs($this->user)
+        ->test(ApplicantForm::class, ['event' => $this->event])
+        ->set('ocrRaw', ['x' => 'y']);
+})->throws(\Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException::class);
