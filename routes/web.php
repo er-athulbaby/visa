@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ApplicantFileController;
+use App\Livewire\ApplicantForm;
+use App\Livewire\Dashboard;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -8,9 +10,11 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    Route::get('/events/{event:slug}/applicants/create', ApplicantForm::class)->name('applicants.create');
+    Route::get('/applicants/{applicant}/edit', ApplicantForm::class)->name('applicants.edit');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

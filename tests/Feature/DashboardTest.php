@@ -1,27 +1,28 @@
 <?php
 
-namespace Tests\Feature;
-
+use App\Models\Applicant;
+use App\Models\Event;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DashboardTest extends TestCase
-{
-    use RefreshDatabase;
+it('redirects guests to the login page', function () {
+    $this->get('/dashboard')->assertRedirect('/login');
+});
 
-    public function test_guests_are_redirected_to_the_login_page(): void
-    {
-        $response = $this->get('/dashboard');
-        $response->assertRedirect('/login');
-    }
+it('shows open events and only my applicants', function () {
+    $me = User::factory()->create();
+    $event = Event::factory()->create(['name' => 'Gulf Games 2027']);
+    Applicant::factory()->for($me)->for($event)->create(['full_name' => 'My Athlete']);
+    Applicant::factory()->create(['full_name' => 'Someone Else']);
 
-    public function test_authenticated_users_can_visit_the_dashboard(): void
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
+    $this->actingAs($me)->get(route('dashboard'))
+        ->assertOk()
+        ->assertSee('Gulf Games 2027')
+        ->assertSee('My Athlete')
+        ->assertDontSee('Someone Else');
+});
 
-        $response = $this->get('/dashboard');
-        $response->assertStatus(200);
-    }
-}
+it('requires a verified email', function () {
+    $this->actingAs(User::factory()->unverified()->create())
+        ->get(route('dashboard'))
+        ->assertRedirect(route('verification.notice'));
+});
