@@ -38,6 +38,8 @@ it('reads a cleaned-up copy of the photo first, then falls back to the original'
 
     Process::fake(['*' => Process::sequence()
         ->push(Process::result(output: 'unreadable'))
+        ->push(Process::result(output: 'unreadable'))
+        ->push(Process::result(output: 'unreadable'))
         ->push(Process::result(output: "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO7408122F1204159ZE184226B<<<<<10\n")),
     ]);
 
@@ -50,12 +52,49 @@ it('reads a cleaned-up copy of the photo first, then falls back to the original'
 
         return true;
     });
-    expect($images)->toHaveCount(2)
-        ->and($images[0])->not->toBe($photo)   // cleaned copy first
-        ->and($images[1])->toBe($photo)        // original as fallback
-        ->and(file_exists($images[0]))->toBeFalse(); // temp copy removed
+    expect($images)->toHaveCount(4)                  // 3 cleaned sizes, then the original
+        ->and(array_slice($images, 0, 3))->not->toContain($photo)
+        ->and($images[3])->toBe($photo);
+    foreach (array_slice($images, 0, 3) as $tmp) {
+        expect(file_exists($tmp))->toBeFalse();       // temp copies removed
+    }
 
     unlink($photo);
+});
+
+it('stops at the first read whose check digits pass', function () {
+    $photo = tempnam(sys_get_temp_dir(), 'pp').'.png';
+    imagepng(imagecreatetruecolor(600, 400), $photo);
+
+    Process::fake(['*' => Process::result(output: "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO7408122F1204159ZE184226B<<<<<10\n")]);
+
+    expect(app(PassportOcr::class)->read($photo)['passport_number'])->toBe('L898902C3');
+    Process::assertRanTimes(fn () => true, 1);
+
+    unlink($photo);
+});
+
+it('crops white page margins before reading', function () {
+    // a beige "passport" on a large white page, like a scanned PDF
+    $page = tempnam(sys_get_temp_dir(), 'pp').'.png';
+    $img = imagecreatetruecolor(2400, 3400);
+    imagefill($img, 0, 0, imagecolorallocate($img, 255, 255, 255));
+    imagefilledrectangle($img, 100, 100, 2100, 900, imagecolorallocate($img, 232, 228, 220));
+    imagepng($img, $page);
+
+    $sizes = [];
+    Process::fake(function ($process) use (&$sizes) {
+        [$w, $h] = getimagesize($process->command[1]);
+        $sizes[] = round($w / $h, 1);
+
+        return Process::result(output: '');
+    });
+
+    app(PassportOcr::class)->read($page);
+
+    expect($sizes[0])->toBe(2.5); // 2001x801 passport area, not the 2400x3400 page
+
+    unlink($page);
 });
 
 function fakePdf(): string

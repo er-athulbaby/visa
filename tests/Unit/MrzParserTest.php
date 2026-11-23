@@ -27,6 +27,14 @@ it('finds the MRZ inside noisy OCR output with stray spaces', function () {
     expect((new MrzParser)->parse($noisy)['passport_number'])->toBe('L898902C3');
 });
 
+it('fixes 0/O confusion in country codes', function () {
+    // As read by tesseract from a PDF scan: "UT0" (zero) for the UTO nationality
+    $ocr = "P<UT0ERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UT07408122F1204159ZE184226B<<<<<19";
+
+    expect((new MrzParser)->parse($ocr))
+        ->toMatchArray(['nationality' => 'UTO', 'issuing_country' => 'UTO', 'passport_number' => 'L898902C3']);
+});
+
 it('fixes O/0 confusion in numeric fields', function () {
     $ocr = "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO74O8122F12O4159ZE184226B<<<<<10";
 

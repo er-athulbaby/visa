@@ -88,7 +88,8 @@ class MrzParser
 
     private function country(string $code): string
     {
-        $code = str_replace('<', '', $code);
+        // Country codes are letters only (and not covered by check digits): undo digit look-alikes.
+        $code = strtr(str_replace('<', '', $code), ['0' => 'O', '1' => 'I', '5' => 'S', '8' => 'B']);
 
         return $code === 'D' ? 'DEU' : $code;
     }
