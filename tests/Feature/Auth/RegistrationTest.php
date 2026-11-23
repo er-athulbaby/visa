@@ -32,4 +32,22 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
     }
+
+    public function test_registration_is_rate_limited_per_ip(): void
+    {
+        for ($i = 0; $i < 5; $i++) {
+            Volt::test('auth.register')->set('email', 'bad')->call('register');
+        }
+
+        Volt::test('auth.register')
+            ->set('name', 'Test User')
+            ->set('email', 'ok@example.com')
+            ->set('password', 'password')
+            ->set('password_confirmation', 'password')
+            ->call('register')
+            ->assertHasErrors(['email'])
+            ->assertNoRedirect();
+
+        $this->assertGuest();
+    }
 }

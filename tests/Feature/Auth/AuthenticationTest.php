@@ -34,6 +34,19 @@ class AuthenticationTest extends TestCase
         $this->assertAuthenticated();
     }
 
+    public function test_staff_cannot_log_in_through_the_portal(): void
+    {
+        foreach ([User::factory()->processor()->create(), User::factory()->admin()->create()] as $staff) {
+            LivewireVolt::test('auth.login')
+                ->set('email', $staff->email)
+                ->set('password', 'password')
+                ->call('login')
+                ->assertHasErrors(['email']);
+
+            $this->assertGuest();
+        }
+    }
+
     public function test_users_can_not_authenticate_with_invalid_password(): void
     {
         $user = User::factory()->create();

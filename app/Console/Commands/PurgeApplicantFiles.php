@@ -20,6 +20,7 @@ class PurgeApplicantFiles extends Command
         Applicant::query()
             ->whereHas('event', fn ($q) => $q->whereDate('end_date', '<', $cutoff))
             ->where(fn ($q) => $q->whereNotNull('passport_scan_path')->orWhereNotNull('photo_path'))
+            ->lazyById()
             ->each(function (Applicant $applicant) use ($disk) {
                 $paths = array_filter([$applicant->passport_scan_path, $applicant->photo_path]);
                 if (! $disk->delete($paths)) {

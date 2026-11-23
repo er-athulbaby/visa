@@ -78,3 +78,22 @@ it('does not notify when moving a draft into checkout', function () {
 
     Notification::assertNothingSent();
 });
+
+it('sends the VisaIssued email without an attachment when no PDF is stored', function () {
+    Storage::fake(config('visa.disk'));
+    $applicant = Applicant::factory()->create(['status' => ApplicantStatus::VisaIssued, 'visa_pdf_path' => null]);
+
+    $mail = (new ApplicantStatusChanged($applicant))->toMail($applicant->user);
+
+    expect($mail->rawAttachments)->toBeEmpty();
+});
+
+it('attaches the visa PDF when one is stored', function () {
+    Storage::fake(config('visa.disk'));
+    Storage::disk(config('visa.disk'))->put('visas/v.pdf', 'pdf');
+    $applicant = Applicant::factory()->create(['status' => ApplicantStatus::VisaIssued, 'visa_pdf_path' => 'visas/v.pdf']);
+
+    $mail = (new ApplicantStatusChanged($applicant))->toMail($applicant->user);
+
+    expect($mail->rawAttachments)->toHaveCount(1);
+});

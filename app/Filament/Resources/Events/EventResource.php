@@ -37,7 +37,7 @@ class EventResource extends Resource
             DatePicker::make('end_date')->required()->afterOrEqual('start_date'),
             DatePicker::make('application_deadline')->required()->beforeOrEqual('end_date'),
             TextInput::make('visa_fee')->label('Visa fee per applicant')->numeric()->minValue(0)->required()->prefix('BHD'),
-            TextInput::make('vat_rate')->label('VAT rate')->numeric()->minValue(0)->maxValue(100)->default(0)->suffix('%'),
+            TextInput::make('vat_rate')->label('VAT rate')->numeric()->minValue(0)->maxValue(100)->required()->default(0)->suffix('%'),
             Toggle::make('is_open')->label('Open for applications')->default(true),
         ]);
     }

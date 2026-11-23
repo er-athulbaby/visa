@@ -15,7 +15,6 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Support\Facades\Storage;
-use IlluminateSupportFacadesDB;
 
 class ViewApplicant extends ViewRecord
 {

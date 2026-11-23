@@ -69,7 +69,7 @@ class User extends Authenticatable implements FilamentUser, HasAppAuthentication
 
     public function hasRole(Role ...$roles): bool
     {
-        return in_array($this->role, $roles, true);
+        return $this->is_active && in_array($this->role, $roles, true);
     }
 
     public function applicants(): HasMany

@@ -5,7 +5,7 @@
 2. S3: create `boc-visa-files` and `boc-visa-backups`; Block Public Access ON; default encryption SSE-KMS;
    lifecycle rule on `boc-visa-backups`: expire objects after 30 days.
    - **Default SSE-KMS encryption MUST be enabled on `boc-visa-backups`.** The `backups` disk sets no SSE option itself, so backups are encrypted only by the bucket's default encryption. Confirm it under the bucket's Properties → Default encryption before the first `db:backup`.
-3. IAM role for EC2 with s3:GetObject/PutObject/DeleteObject/ListBucket on both buckets, kms:Encrypt/Decrypt on the key, ses:SendRawEmail.
+3. IAM role for EC2 with s3:GetObject/PutObject/DeleteObject/ListBucket on both buckets, kms:Encrypt, kms:Decrypt and kms:GenerateDataKey (required for SSE-KMS PutObject) on the key, ses:SendRawEmail.
 4. SES (me-south-1): verify the sending domain (DKIM), request production access.
 5. EC2: Ubuntu 24.04, t3.medium, 30 GB gp3 encrypted EBS, attach the IAM role. Security group: 80/443 from anywhere, 22 from BOC IPs only.
 6. Data Lifecycle Manager: daily EBS snapshot policy, keep 7.
@@ -47,8 +47,8 @@ If an AWS ALB or CloudFront is in front of EC2, configure Laravel's trusted prox
     # log in at /admin and set up 2FA
 
 ## Tap
-    Set TAP_SECRET_KEY (live key only after sandbox sign-off). In the Tap dashboard, no webhook URL is needed —
-    each charge sends `post.url` = https://visa.example.bh/webhooks/tap.
+Set TAP_SECRET_KEY (live key only after sandbox sign-off). In the Tap dashboard, no webhook URL is needed —
+each charge sends `post.url` = https://visa.example.bh/webhooks/tap.
 
 ## Verify after deploy
 - `php artisan schedule:list` shows payments:reconcile (every 10 min), files:purge (02:00), db:backup (01:00).

@@ -23,6 +23,12 @@ it('lets processors open documents', function () {
         ->assertRedirect();
 });
 
+it('blocks deactivated processors', function () {
+    $this->actingAs(User::factory()->processor()->create(['is_active' => false]))
+        ->get(route('applicant.file', [$this->applicant, 'passport']))
+        ->assertForbidden();
+});
+
 it('blocks other applicants and finance', function (string $role) {
     $user = $role === 'finance' ? User::factory()->finance()->create() : User::factory()->create();
 
