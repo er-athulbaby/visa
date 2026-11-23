@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicantFileController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -17,6 +18,12 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/files/applicants/{applicant}/{kind}', ApplicantFileController::class)
+        ->whereIn('kind', ['passport', 'photo', 'visa'])
+        ->name('applicant.file');
 });
 
 require __DIR__.'/auth.php';
