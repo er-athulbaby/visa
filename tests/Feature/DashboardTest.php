@@ -8,6 +8,21 @@ use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
+it('lists only paid and refunded payments, as invoices', function () {
+    $me = User::factory()->create();
+    $event = Event::factory()->create();
+    foreach ([['paid', 30], ['refunded', 60], ['failed', 90], ['initiated', 120]] as [$status, $amount]) {
+        \App\Models\Payment::factory()->for($me)->for($event)->create(['status' => $status, 'amount' => $amount]);
+    }
+
+    $this->actingAs($me)->get(route('dashboard'))
+        ->assertSee('Invoices')
+        ->assertSee('BHD 30.000')
+        ->assertSee('BHD 60.000')
+        ->assertDontSee('BHD 90.000')
+        ->assertDontSee('BHD 120.000');
+});
+
 it('redirects guests to the login page', function () {
     $this->get('/dashboard')->assertRedirect('/login');
 });

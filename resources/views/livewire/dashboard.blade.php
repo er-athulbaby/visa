@@ -55,7 +55,7 @@
 
         @if ($payments->isNotEmpty())
             <section class="{{ $card }} flex flex-col gap-3 p-4">
-                <h2 class="text-base font-bold">Payments</h2>
+                <h2 class="text-base font-bold">Invoices</h2>
                 <ul class="flex flex-col divide-y divide-gray-100">
                     @foreach ($payments as $p)
                         <li class="flex flex-col gap-1 py-3 first:pt-0 last:pb-0">
@@ -66,7 +66,7 @@
                             <span class="text-[13px] text-gray-600">{{ $p->event->name }} · {{ $p->created_at->format('d M Y') }} · {{ $p->applicants_count }} {{ Str::plural('applicant', $p->applicants_count) }}</span>
                             @if (Route::has('invoices.download'))
                                 @foreach ($p->invoices as $invoice)
-                                    <a href="{{ route('invoices.download', $invoice) }}" class="{{ $action }}">Invoice {{ $invoice->number }}</a>
+                                    <a href="{{ route('invoices.download', $invoice) }}" class="{{ $action }}">{{ $invoice->type === 'credit_note' ? 'Credit note' : 'Invoice' }} {{ $invoice->number }}</a>
                                 @endforeach
                             @endif
                         </li>
