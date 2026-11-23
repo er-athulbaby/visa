@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Add applicant — BOC Visa Portal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#B0102A}a:hover{color:#7F0B1E}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1780px; box-sizing: border-box; background: #F6F6F7; font-family: Inter, system-ui, sans-serif; color: #111827; display: flex; flex-direction: column">
+
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E5E7EB; padding: 8px 8px 8px 4px; display: flex; align-items: center; gap: 4px">
+    <a href="Dashboard.dc.html" aria-label="Back to dashboard" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #111827">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+    </a>
+    <div style="display: flex; flex-direction: column">
+      <span style="font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 16px">Add applicant</span>
+      <span style="font-size: 12px; color: #4B5563">Gulf Games 2027</span>
+    </div>
+  </header>
+
+  <form style="padding: 20px 16px 32px 16px; display: flex; flex-direction: column; gap: 20px">
+
+    <section style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 26px; height: 26px; border-radius: 13px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span>
+        <h2 style="margin: 0; font-size: 16px; font-weight: 700">Passport bio page</h2>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center; border: 1px solid #E5E7EB; border-radius: 12px; padding: 10px">
+        <div style="width: 96px; height: 66px; border-radius: 8px; background: #E5E7EB; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #4B5563; text-align: center">Passport<br>scan preview</div>
+        <div style="display: flex; flex-direction: column; gap: 4px; min-width: 0">
+          <span style="font-size: 14px; font-weight: 600">passport-lena.jpg</span>
+          <span style="font-size: 13px; color: #4B5563">2.1 MB · JPG</span>
+          <button type="button" style="align-self: flex-start; height: 44px; padding: 0; border: 0; background: none; color: #B0102A; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Replace file</button>
+        </div>
+      </div>
+      <button type="button" style="height: 48px; border: 1.5px solid {{accent}}; border-radius: 12px; background: #FFFFFF; color: #9F1239; font: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 12h10M7 16h6"></path></svg>
+        Read details from passport
+      </button>
+      <div role="status" style="display: flex; gap: 10px; align-items: flex-start; background: #ECFDF5; border: 1px solid #A7F3D0; border-radius: 10px; padding: 10px 12px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#065F46" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M20 6L9 17l-5-5"></path></svg>
+        <span style="font-size: 14px; line-height: 1.45; color: #065F46"><strong>Passport read.</strong> We filled in the details below — please check every field.</span>
+      </div>
+    </section>
+
+    <section style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 26px; height: 26px; border-radius: 13px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">2</span>
+        <h2 style="margin: 0; font-size: 16px; font-weight: 700">Check details</h2>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="name" style="font-size: 14px; font-weight: 600">Full name <span style="font-weight: 500; color: #4B5563">(as in passport)</span></label>
+        <input id="name" value="LENA MARIA FISCHER" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827">
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="nat" style="font-size: 14px; font-weight: 600">Nationality</label>
+          <select id="nat" style="height: 48px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; background: #FFFFFF"><option>Germany</option></select>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="dob" style="font-size: 14px; font-weight: 600">Date of birth</label>
+          <input id="dob" value="12 Aug 1994" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; min-width: 0">
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="pno" style="font-size: 14px; font-weight: 600">Passport no.</label>
+          <input id="pno" value="C01X00T47" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; min-width: 0">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="coi" style="font-size: 14px; font-weight: 600">Country of issue</label>
+          <select id="coi" style="height: 48px; box-sizing: border-box; padding: 0 10px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; background: #FFFFFF"><option>Germany</option></select>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="doi" style="font-size: 14px; font-weight: 600">Date of issue</label>
+          <input id="doi" placeholder="DD MMM YYYY" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 2px solid {{accent}}; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; min-width: 0">
+          <span style="font-size: 12px; color: #4B5563">Not on the MRZ — please type it</span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <label for="doe" style="font-size: 14px; font-weight: 600">Date of expiry</label>
+          <input id="doe" value="10 Aug 2032" style="height: 48px; box-sizing: border-box; padding: 0 12px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; min-width: 0">
+          <span style="font-size: 12px; color: #4B5563">Valid 6+ months after the event</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 26px; height: 26px; border-radius: 13px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">3</span>
+        <h2 style="margin: 0; font-size: 16px; font-weight: 700">Contact</h2>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="em" style="font-size: 14px; font-weight: 600">Email</label>
+        <input id="em" type="email" placeholder="applicant@example.com" style="height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827">
+      </div>
+      <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 6px">
+        <legend style="padding: 0; margin-bottom: 6px; font-size: 14px; font-weight: 600">Mobile</legend>
+        <div style="display: flex; gap: 8px">
+          <label for="mob-cc" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Mobile country code</label>
+          <select id="mob-cc" style="flex: 0 0 118px; height: 48px; box-sizing: border-box; padding: 0 8px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; background: #FFFFFF"><option>DE +49</option><option>BH +973</option><option>IN +91</option></select>
+          <label for="mob" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Mobile number</label>
+          <input id="mob" type="tel" inputmode="numeric" placeholder="151 2345 6789" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827">
+        </div>
+      </fieldset>
+      <fieldset style="margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 6px">
+        <legend style="padding: 0; margin-bottom: 6px; font-size: 14px; font-weight: 600">WhatsApp</legend>
+        <div style="display: flex; gap: 8px">
+          <label for="wa-cc" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">WhatsApp country code</label>
+          <select id="wa-cc" style="flex: 0 0 118px; height: 48px; box-sizing: border-box; padding: 0 8px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827; background: #FFFFFF"><option>DE +49</option><option>BH +973</option><option>IN +91</option></select>
+          <label for="wa" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">WhatsApp number</label>
+          <input id="wa" type="tel" inputmode="numeric" placeholder="151 2345 6789" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 16px; color: #111827">
+        </div>
+        <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #374151; min-height: 44px">
+          <input type="checkbox" style="width: 20px; height: 20px; accent-color: #C8102E; margin: 0">
+          Same as mobile
+        </label>
+      </fieldset>
+    </section>
+
+    <section style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 26px; height: 26px; border-radius: 13px; background: {{accent}}; color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">4</span>
+        <h2 style="margin: 0; font-size: 16px; font-weight: 700">Personal photo</h2>
+      </div>
+      <div style="display: flex; gap: 14px; align-items: center">
+        <div style="width: 84px; height: 108px; flex: none; border-radius: 10px; border: 1.5px dashed #9CA3AF; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"></path></svg>
+        </div>
+        <ul style="margin: 0; padding: 0 0 0 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: #374151; line-height: 1.4">
+          <li>Plain white background</li>
+          <li>Face centred, looking straight ahead</li>
+          <li>No glasses or hat</li>
+          <li>JPG or PNG, max 5 MB</li>
+        </ul>
+      </div>
+      <button type="button" style="height: 48px; border: 1.5px solid #D1D5DB; border-radius: 12px; background: #FFFFFF; color: #111827; font: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M5 20h14"></path></svg>
+        Upload photo
+      </button>
+    </section>
+
+    <label style="display: flex; gap: 12px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px 16px; font-size: 14px; line-height: 1.5; color: #374151; cursor: pointer">
+      <input type="checkbox" required style="width: 22px; height: 22px; flex: none; margin: 1px 0 0 0; accent-color: #C8102E">
+      <span>I confirm the details above match the passport and are correct. I understand wrong details can delay or cancel the visa.</span>
+    </label>
+
+    <a href="Dashboard.dc.html" style="height: 52px; border-radius: 12px; background: {{accent}}; color: #FFFFFF; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Save applicant</a>
+    <p style="margin: 0; text-align: center; font-size: 13px; color: #4B5563; line-height: 1.5">Saved applicants stay in draft until you pay the visa fee from your dashboard.</p>
+  </form>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8102E","options":["#C8102E","#B0102A","#9F1239"]},"$preview":{"width":390,"height":1780}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#C8102E' };
+  }
+}
+</script>
+</body>
+</html>
