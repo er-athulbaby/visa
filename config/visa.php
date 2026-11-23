@@ -15,6 +15,9 @@ return [
 
     'file_retention_days' => (int) env('VISA_FILE_RETENTION_DAYS', 90),
 
+    // Staff 2FA is mandatory. Only turn off on a local dev machine (ADMIN_REQUIRE_2FA=false).
+    'admin_require_2fa' => (bool) env('ADMIN_REQUIRE_2FA', true),
+
     // Comma-separated IPs/CIDRs. Empty = no restriction.
     'admin_ip_allowlist' => array_values(array_filter(array_map('trim', explode(',', (string) env('ADMIN_IP_ALLOWLIST', ''))))),
 

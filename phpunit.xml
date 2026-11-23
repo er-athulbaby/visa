@@ -30,6 +30,7 @@
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="VISA_DISK" value="local"/>
         <env name="TAP_SECRET_KEY" value="sk_test_dummy"/>
+        <env name="ADMIN_REQUIRE_2FA" value="true"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
     </php>
