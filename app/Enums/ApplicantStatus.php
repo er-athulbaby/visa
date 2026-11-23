@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum ApplicantStatus: string
+enum ApplicantStatus: string implements \Filament\Support\Contracts\HasColor, \Filament\Support\Contracts\HasLabel
 {
     case Draft = 'draft';
     case PendingPayment = 'pending_payment';
@@ -40,5 +40,22 @@ enum ApplicantStatus: string
     public function label(): string
     {
         return ucwords(str_replace('_', ' ', $this->value));
+    }
+
+    public function getLabel(): string
+    {
+        return $this->label();
+    }
+
+    public function getColor(): string
+    {
+        return match ($this) {
+            self::Draft, self::PendingPayment => 'gray',
+            self::Submitted => 'info',
+            self::InReview, self::Applied => 'primary',
+            self::NeedsCorrection => 'warning',
+            self::VisaIssued => 'success',
+            self::Rejected => 'danger',
+        };
     }
 }
