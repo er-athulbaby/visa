@@ -20,3 +20,9 @@ it('returns null when tesseract fails', function () {
 
     expect(app(PassportOcr::class)->read('/tmp/passport.jpg'))->toBeNull();
 });
+
+it('returns null when tesseract cannot be started', function () {
+    Process::fake(fn () => throw new RuntimeException('tesseract not found'));
+
+    expect(app(PassportOcr::class)->read('/tmp/passport.jpg'))->toBeNull();
+});
