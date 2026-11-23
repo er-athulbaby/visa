@@ -53,7 +53,7 @@
                 <img src="{{ asset('images/boc-logo.png') }}" alt="Bahrain Olympic Committee" class="h-9 w-auto">
                 <span class="font-heading text-[15px] font-extrabold">Visa Portal</span>
             </a>
-            <details class="relative ml-auto">
+            <details class="relative ml-auto" x-data x-on:keydown.escape="$el.open = false" x-on:click.outside="$el.open = false">
                 <summary aria-label="Account menu" class="flex size-11 cursor-pointer list-none items-center justify-center rounded-full bg-gray-100 text-sm font-bold [&::-webkit-details-marker]:hidden">{{ $user->initials() }}</summary>
                 <div class="absolute right-0 mt-2 flex w-60 flex-col gap-1 rounded-2xl border border-gray-200 bg-white p-2 shadow-lg">
                     <div class="flex flex-col border-b border-gray-100 px-3 pb-2">

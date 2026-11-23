@@ -21,7 +21,6 @@ Route::middleware(['auth'])->group(function () {
 
     Volt::route('settings/profile', 'settings.profile')->name('settings.profile');
     Volt::route('settings/password', 'settings.password')->name('settings.password');
-    Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
 Route::post('/webhooks/tap', \App\Http\Controllers\TapWebhookController::class)->name('tap.webhook');

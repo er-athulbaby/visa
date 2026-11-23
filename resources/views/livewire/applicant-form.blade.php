@@ -5,7 +5,6 @@
     $card = 'flex flex-col gap-3.5 rounded-2xl border border-gray-200 bg-white p-4';
     $badge = 'flex size-[26px] items-center justify-center rounded-full bg-[#C8102E] text-[13px] font-bold text-white';
     $err = 'text-sm text-red-600';
-    $upload = 'mt-2 block w-full text-sm file:mr-3 file:h-11 file:rounded-xl file:border file:border-gray-300 file:bg-white file:px-4 file:font-semibold';
 @endphp
 
 <div class="font-sans text-gray-900">
@@ -37,15 +36,8 @@
                     <span class="{{ $badge }}">1</span>
                     <h2 class="text-base font-bold">Passport bio page</h2>
                 </div>
-                <div>
-                    <label class="{{ $label }}" for="passportScan">Passport bio page (JPG, PNG or PDF, max 5 MB)</label>
-                    <input id="passportScan" type="file" wire:model="passportScan" accept=".jpg,.jpeg,.png,.pdf" class="{{ $upload }}">
-                </div>
+                <x-file-upload id="passportScan" wire:model="passportScan" accept=".jpg,.jpeg,.png,.pdf" :file="$passportScan" label="Passport bio page (JPG, PNG or PDF, max 5 MB)" hint="Tap to choose a photo or scan of the passport page with your picture" />
                 @if ($passportScan)
-                    <div class="flex flex-col gap-0.5 rounded-xl border border-gray-200 p-2.5 text-sm">
-                        <span class="truncate font-semibold">{{ $passportScan->getClientOriginalName() }}</span>
-                        <span class="text-[13px] text-gray-600">{{ number_format($passportScan->getSize() / 1048576, 1) }} MB</span>
-                    </div>
                     @if ($passportScan->getMimeType() !== 'application/pdf')
                         <button type="button" wire:click="readPassport" wire:loading.attr="disabled" wire:target="readPassport" class="flex h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-[#C8102E] bg-white text-[15px] font-bold text-[#9F1239]">
                             Read details from passport
@@ -167,10 +159,7 @@
                         <li>JPG or PNG, max 5 MB</li>
                     </ul>
                 </div>
-                <div>
-                    <label class="{{ $label }}" for="photo">Personal photo (white background, JPG or PNG)</label>
-                    <input id="photo" type="file" wire:model="photo" accept=".jpg,.jpeg,.png" class="{{ $upload }}">
-                </div>
+                <x-file-upload id="photo" wire:model="photo" accept=".jpg,.jpeg,.png" :file="$photo" label="Personal photo (white background, JPG or PNG)" hint="Tap to choose a photo" />
                 @error('photo') <p class="{{ $err }}">{{ $message }}</p> @enderror
             </section>
 

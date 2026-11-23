@@ -50,3 +50,15 @@ it('hides the support line unless configured', function () {
     config(['visa.support_email' => 'help@boc.test']);
     $this->actingAs($me)->get(route('checkout.return', $failed))->assertSee('Need help?')->assertSee('help@boc.test');
 });
+
+it('shows the BOC logo and no starter-kit branding on the login page', function () {
+    $this->get(route('login'))
+        ->assertOk()
+        ->assertSee('images/boc-logo.png')
+        ->assertSee('Passport data is stored in Bahrain')
+        ->assertDontSee('Laravel');
+});
+
+it('no longer has an appearance settings page', function () {
+    $this->actingAs(User::factory()->create())->get('/settings/appearance')->assertNotFound();
+});
