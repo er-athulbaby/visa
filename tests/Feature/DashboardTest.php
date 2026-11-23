@@ -58,3 +58,9 @@ it('forbids deleting a non-draft applicant', function () {
 
     Livewire::actingAs($me)->test(Dashboard::class)->call('delete', $a->id)->assertForbidden();
 });
+
+it('keeps staff out of the applicant portal', function () {
+    $this->actingAs(\App\Models\User::factory()->processor()->create())
+        ->get(route('dashboard'))
+        ->assertRedirect(route('filament.admin.pages.dashboard'));
+});

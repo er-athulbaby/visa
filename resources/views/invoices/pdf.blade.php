@@ -77,7 +77,8 @@
         </tbody>
     </table>
 
-    <table style="width: 260px; margin-left: auto; margin-top: 18px;">
+    <table style="margin-top: 18px;"><tr><td></td><td style="width: 260px;">
+    <table>
         <tr><td class="muted" style="padding: 4px 0;">Subtotal</td><td class="right">{{ number_format((float) $invoice->subtotal, 3) }}</td></tr>
         @if ((float) $invoice->vat_amount > 0)
             <tr><td class="muted" style="padding: 4px 0;">VAT ({{ $p->event->vat_rate }}%)</td><td class="right">{{ number_format((float) $invoice->vat_amount, 3) }}</td></tr>
@@ -87,6 +88,7 @@
             <td class="right" style="border-top: 1.5px solid #111827; padding-top: 8px; font-size: 13px; font-weight: bold;">{{ $p->currency }} {{ number_format((float) $invoice->total, 3) }}</td>
         </tr>
     </table>
+    </td></tr></table>
 
     <div class="muted" style="margin-top: 60px; border-top: 1px solid #E5E7EB; padding-top: 14px; line-height: 1.6;">
         Paid via Tap{{ $p->payment_method ? ' ('.$p->payment_method.')' : '' }} on {{ $p->paid_at?->format('d M Y H:i') }}<br>
