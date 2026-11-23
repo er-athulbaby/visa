@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Enums\ApplicantStatus;
+use App\Enums\PaymentStatus;
 use App\Exceptions\InvalidStatusTransition;
 use App\Models\Applicant;
 use App\Models\Event;
@@ -71,7 +72,10 @@ class Dashboard extends Component
             'events' => Event::acceptingApplications()->orderBy('start_date')->get(),
             'applicantsByEvent' => $applicantsByEvent,
             'selection' => $selection,
-            'payments' => $user->payments()->with(['event', 'invoices'])->withCount('applicants')->latest()->get(),
+            // Only payments that produced an invoice/credit note; failed or abandoned checkouts stay in the staff panel.
+            'payments' => $user->payments()
+                ->whereIn('status', [PaymentStatus::Paid->value, PaymentStatus::Refunded->value])
+                ->with(['event', 'invoices'])->withCount('applicants')->latest()->get(),
         ]);
     }
 }
