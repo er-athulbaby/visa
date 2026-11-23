@@ -52,7 +52,7 @@ enum ApplicantStatus: string implements \Filament\Support\Contracts\HasColor, \F
         return match ($this) {
             self::Draft, self::PendingPayment => 'gray',
             self::Submitted => 'info',
-            self::InReview, self::Applied => 'primary',
+            self::InReview, self::Applied => 'indigo',
             self::NeedsCorrection => 'warning',
             self::VisaIssued => 'success',
             self::Rejected => 'danger',

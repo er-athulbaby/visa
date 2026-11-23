@@ -1,19 +1,16 @@
-<div class="flex items-start max-md:flex-col">
-    <div class="mr-10 w-full pb-4 md:w-[220px]">
-        <flux:navlist>
-            <flux:navlist.item href="{{ route('settings.profile') }}" wire:navigate>Profile</flux:navlist.item>
-            <flux:navlist.item href="{{ route('settings.password') }}" wire:navigate>Password</flux:navlist.item>
-            <flux:navlist.item href="{{ route('settings.appearance') }}" wire:navigate>Appearance</flux:navlist.item>
-        </flux:navlist>
-    </div>
+<div class="flex items-start gap-6 max-md:flex-col">
+    <nav aria-label="Settings" class="flex w-full gap-1 md:w-[200px] md:flex-col">
+        @foreach (['settings.profile' => 'Profile', 'settings.password' => 'Password'] as $route => $label)
+            <a href="{{ route($route) }}" wire:navigate @if (request()->routeIs($route)) aria-current="page" @endif
+               class="flex min-h-11 items-center rounded-[10px] px-3 text-sm {{ request()->routeIs($route) ? 'bg-[#FEF2F2] font-bold text-[#9F1239]' : 'font-medium text-gray-700 hover:bg-gray-50' }}">{{ $label }}</a>
+        @endforeach
+    </nav>
 
-    <flux:separator class="md:hidden" />
+    <div class="w-full max-w-lg flex-1 rounded-2xl border border-gray-200 bg-white p-5">
+        <h2 class="font-heading text-lg font-extrabold">{{ $heading ?? '' }}</h2>
+        <p class="text-sm text-gray-600">{{ $subheading ?? '' }}</p>
 
-    <div class="flex-1 self-stretch max-md:pt-6">
-        <flux:heading>{{ $heading ?? '' }}</flux:heading>
-        <flux:subheading>{{ $subheading ?? '' }}</flux:subheading>
-
-        <div class="mt-5 w-full max-w-lg">
+        <div class="mt-5 w-full">
             {{ $slot }}
         </div>
     </div>

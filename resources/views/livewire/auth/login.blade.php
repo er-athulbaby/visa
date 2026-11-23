@@ -72,45 +72,33 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col gap-6">
-    <x-auth-header title="Log in to your account" description="Enter your email and password below to log in" />
+<div class="flex flex-1 flex-col">
+    <x-auth.brand />
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    <form wire:submit="login" class="flex flex-col gap-5 px-6 pt-10 pb-10">
+        <x-auth.heading title="Log in" description="Apply for and track visas for athletes, officials and delegations attending BOC events." />
 
-    <form wire:submit="login" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <flux:input wire:model="email" label="{{ __('Email address') }}" type="email" name="email" required autofocus autocomplete="email" placeholder="email@example.com" />
+        <x-auth.status :status="session('status')" />
 
-        <!-- Password -->
-        <div class="relative">
-            <flux:input
-                wire:model="password"
-                label="{{ __('Password') }}"
-                type="password"
-                name="password"
-                required
-                autocomplete="current-password"
-                placeholder="Password"
-            />
+        <x-auth.field wire:model="email" name="email" label="Email" type="email" required autofocus autocomplete="email" placeholder="you@example.com" />
 
-            @if (Route::has('password.request'))
-                <x-text-link class="absolute right-0 top-0" href="{{ route('password.request') }}">
-                    {{ __('Forgot your password?') }}
-                </x-text-link>
-            @endif
-        </div>
+        <x-auth.field wire:model="password" name="password" label="Password" type="password" required autocomplete="current-password" placeholder="Your password">
+            <x-slot:aside>
+                @if (Route::has('password.request'))
+                    <a href="{{ route('password.request') }}" wire:navigate class="text-sm font-medium text-[#B0102A] hover:text-[#7F0B1E]">Forgot password?</a>
+                @endif
+            </x-slot:aside>
+        </x-auth.field>
 
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" label="{{ __('Remember me') }}" />
+        <label class="flex min-h-11 items-center gap-2.5 text-sm text-gray-700">
+            <input type="checkbox" wire:model="remember" class="size-5 accent-[#C8102E]">
+            Keep me logged in
+        </label>
 
-        <div class="flex items-center justify-end">
-            <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
-        </div>
+        <x-auth.button>Log in</x-auth.button>
+
+        <p class="text-center text-[15px] text-gray-700">New here? <a href="{{ route('register') }}" wire:navigate class="font-semibold text-[#B0102A] hover:text-[#7F0B1E]">Create an account</a></p>
     </form>
 
-    <div class="space-x-1 text-center text-sm text-zinc-600 dark:text-zinc-400">
-        Don't have an account?
-        <x-text-link href="{{ route('register') }}">Sign up</x-text-link>
-    </div>
+    <x-auth.privacy />
 </div>

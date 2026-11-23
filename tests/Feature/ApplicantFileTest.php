@@ -49,3 +49,10 @@ it('only serves the visa once issued', function () {
         ->get(route('applicant.file', [$this->applicant, 'visa']))
         ->assertRedirect();
 });
+
+it('does not bounce processors to the admin panel from the file route', function () {
+    $r = $this->actingAs(User::factory()->processor()->create())
+        ->get(route('applicant.file', [$this->applicant, 'passport']));
+    $r->assertRedirect();
+    expect($r->headers->get('Location'))->not->toContain('/admin');
+});

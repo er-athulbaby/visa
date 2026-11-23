@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Login;
 use App\Http\Middleware\RestrictAdminIp;
 use Filament\Auth\MultiFactor\App\AppAuthentication;
 use Filament\Http\Middleware\Authenticate;
@@ -13,7 +14,6 @@ use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -29,11 +29,19 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->viteTheme('resources/css/filament/admin/theme.css')
+            ->login(Login::class)
             ->brandName('BOC Visa Portal')
-            ->brandLogo(fn () => file_exists(public_path('images/boc-logo.png')) ? asset('images/boc-logo.png') : null)
+            ->darkMode(false)
+            ->font('Inter')
+            ->sidebarCollapsibleOnDesktop()
+            ->brandLogo(asset('images/boc-logo.png'))
+            ->brandLogoHeight('3rem')
+            ->favicon(asset('images/boc-logo.png'))
             ->colors([
-                'primary' => Color::Red,
+                'primary' => Color::hex('#C8102E'),
+                'gray' => Color::Neutral,
+                'indigo' => Color::Indigo,
             ])
             ->multiFactorAuthentication([
                 AppAuthentication::make()->recoverable(),
@@ -47,7 +55,6 @@ class AdminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
             ->widgets([
                 AccountWidget::class,
-                FilamentInfoWidget::class,
             ])
             ->middleware([
                 RestrictAdminIp::class,

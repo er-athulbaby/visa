@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard — BOC Visa Portal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#B0102A}a:hover{color:#7F0B1E}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 1480px; box-sizing: border-box; background: #F6F6F7; font-family: Inter, system-ui, sans-serif; color: #111827; display: flex; flex-direction: column">
+
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E5E7EB; padding: 12px 16px; display: flex; align-items: center; gap: 10px">
+    <img src="/images/boc-logo.png" alt="Bahrain Olympic Committee" style="height: 44px; width: auto; display: block">
+    <span style="font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 16px">Visa Portal</span>
+    <button type="button" aria-label="Account menu" style="margin-left: auto; width: 44px; height: 44px; border-radius: 22px; border: 0; background: #F3F4F6; color: #111827; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer">DA</button>
+  </header>
+
+  <main style="padding: 20px 16px 120px 16px; display: flex; flex-direction: column; gap: 28px">
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 20px">Open events</h2>
+      <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 16px; overflow: hidden">
+        <div style="height: 6px; background: {{accent}}"></div>
+        <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; flex-direction: column; gap: 4px">
+            <h3 style="margin: 0; font-size: 17px; font-weight: 700">Gulf Games 2027</h3>
+            <p style="margin: 0; font-size: 14px; color: #4B5563">23 Feb – 5 Mar 2027 · Manama</p>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <div style="background: #F9FAFB; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 12px; color: #4B5563">Visa fee</span>
+              <span style="font-size: 15px; font-weight: 700">BHD 30.000 <span style="font-weight: 500; font-size: 12px; color: #4B5563">/ person</span></span>
+            </div>
+            <div style="background: #F9FAFB; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 12px; color: #4B5563">Apply by</span>
+              <span style="font-size: 15px; font-weight: 700">23 Jan 2027</span>
+            </div>
+          </div>
+          <a href="ApplicantForm.dc.html" style="height: 48px; border-radius: 12px; background: {{accent}}; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>
+            Add applicant
+          </a>
+        </div>
+      </article>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 20px">My applicants</h2>
+        <span style="font-size: 13px; color: #4B5563">Gulf Games 2027 · 5</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <article style="background: #FFFFFF; border: 2px solid {{accent}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+          <input type="checkbox" checked aria-label="Select Maria Santos for payment" style="width: 22px; height: 22px; margin: 2px 0 0 0; accent-color: #C8102E">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+            <div style="display: flex; justify-content: space-between; gap: 8px">
+              <span style="font-weight: 700; font-size: 15px">Maria Santos</span>
+              <span style="background: #F3F4F6; color: #374151; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap">Draft</span>
+            </div>
+            <span style="font-size: 13px; color: #4B5563">Passport P4821937 · Philippines</span>
+            <div style="display: flex; gap: 16px"><a href="ApplicantForm.dc.html" style="font-size: 14px; font-weight: 600; text-decoration: none">Edit</a><a href="#" style="font-size: 14px; font-weight: 600; text-decoration: none; color: #4B5563">Delete</a></div>
+          </div>
+        </article>
+
+        <article style="background: #FFFFFF; border: 2px solid {{accent}}; border-radius: 14px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+          <input type="checkbox" checked aria-label="Select Ravi Kumar for payment" style="width: 22px; height: 22px; margin: 2px 0 0 0; accent-color: #C8102E">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 6px; min-width: 0">
+            <div style="display: flex; justify-content: space-between; gap: 8px">
+              <span style="font-weight: 700; font-size: 15px">Ravi Kumar</span>
+              <span style="background: #F3F4F6; color: #374151; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap">Draft</span>
+            </div>
+            <span style="font-size: 13px; color: #4B5563">Passport Z6610452 · India</span>
+            <div style="display: flex; gap: 16px"><a href="ApplicantForm.dc.html" style="font-size: 14px; font-weight: 600; text-decoration: none">Edit</a><a href="#" style="font-size: 14px; font-weight: 600; text-decoration: none; color: #4B5563">Delete</a></div>
+          </div>
+        </article>
+
+        <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between; gap: 8px">
+            <span style="font-weight: 700; font-size: 15px">Lena Fischer</span>
+            <span style="background: #FFFBEB; color: #92400E; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap">Needs correction</span>
+          </div>
+          <span style="font-size: 13px; color: #4B5563">Passport C01X00T47 · Germany</span>
+          <div style="background: #FFFBEB; border: 1px solid #FDE68A; border-radius: 10px; padding: 10px 12px; font-size: 14px; line-height: 1.45; color: #78350F">Photo background must be plain white. Please upload a new photo.</div>
+          <a href="ApplicantForm.dc.html" style="height: 44px; border-radius: 10px; border: 1.5px solid #92400E; color: #92400E; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center">Fix and resubmit</a>
+        </article>
+
+        <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; gap: 8px">
+            <span style="font-weight: 700; font-size: 15px">Omar Haddad</span>
+            <span style="background: #EEF2FF; color: #3730A3; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap">In review</span>
+          </div>
+          <span style="font-size: 13px; color: #4B5563">Passport N3390218 · Jordan</span>
+        </article>
+
+        <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between; gap: 8px">
+            <span style="font-weight: 700; font-size: 15px">Aiko Tanaka</span>
+            <span style="background: #ECFDF5; color: #065F46; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; white-space: nowrap">Visa issued</span>
+          </div>
+          <span style="font-size: 13px; color: #4B5563">Passport TR5582014 · Japan</span>
+          <a href="#" style="height: 44px; border-radius: 10px; background: #065F46; color: #FFFFFF; font-size: 14px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"></path></svg>
+            Download visa
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 20px">Payments</h2>
+      <article style="background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; gap: 8px">
+          <span style="font-weight: 700; font-size: 15px">BHD 90.000</span>
+          <span style="background: #ECFDF5; color: #065F46; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px">Paid</span>
+        </div>
+        <span style="font-size: 13px; color: #4B5563">12 Jan 2027 · Gulf Games 2027 · 3 applicants</span>
+        <a href="#" style="font-size: 14px; font-weight: 600; text-decoration: none; display: flex; align-items: center; gap: 6px; min-height: 44px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6"></path></svg>
+          Invoice BOC-2027-00012
+        </a>
+      </article>
+    </section>
+  </main>
+
+  <div style="position: sticky; bottom: 0; margin-top: auto; background: #FFFFFF; border-top: 1px solid #E5E7EB; padding: 12px 16px 20px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 -4px 16px rgba(17,24,39,0.06)">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 13px; color: #4B5563">2 selected</span>
+      <span style="font-size: 17px; font-weight: 800">BHD 60.000</span>
+    </div>
+    <a href="PaymentResult.dc.html" style="margin-left: auto; height: 48px; padding: 0 24px; border-radius: 12px; background: {{accent}}; color: #FFFFFF; font-size: 15px; font-weight: 700; text-decoration: none; display: flex; align-items: center">Pay now</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8102E","options":["#C8102E","#B0102A","#9F1239"]},"$preview":{"width":390,"height":1480}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#C8102E' };
+  }
+}
+</script>
+</body>
+</html>

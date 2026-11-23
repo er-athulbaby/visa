@@ -4,6 +4,9 @@ return [
     // Disk for passports, photos, visas, invoices. 'local' (storage/app/private) in dev, 's3' in prod.
     'disk' => env('VISA_DISK', 'local'),
 
+    // Shown on the payment-failed page; hidden when null.
+    'support_email' => env('SUPPORT_EMAIL'),
+
     'tesseract_path' => env('TESSERACT_PATH', 'tesseract'),
 
     'tap' => [

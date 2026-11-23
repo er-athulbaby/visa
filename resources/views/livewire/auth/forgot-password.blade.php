@@ -22,23 +22,23 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col gap-6">
-    <x-auth-header title="Forgot password" description="Enter your email to receive a password reset link" />
-
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
-
-    <form wire:submit="sendPasswordResetLink" class="flex flex-col gap-6">
-        <!-- Email Address -->
-        <div class="grid gap-2">
-            <flux:input wire:model="email" label="{{ __('Email Address') }}" type="email" name="email" required autofocus placeholder="email@example.com" />
-        </div>
-
-        <flux:button variant="primary" type="submit" class="w-full">{{ __('Email password reset link') }}</flux:button>
-    </form>
-
-    <div class="space-x-1 text-center text-sm text-zinc-400">
-        Or, return to
-        <x-text-link href="{{ route('login') }}">log in</x-text-link>
+<div class="flex flex-1 flex-col">
+    <div class="px-1 pt-2">
+        <a href="{{ route('login') }}" wire:navigate aria-label="Back to log in" class="flex size-11 items-center justify-center text-gray-900">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+        </a>
     </div>
+    <x-auth.brand :name="false" />
+
+    <form wire:submit="sendPasswordResetLink" class="flex flex-col gap-5 px-6 pt-7 pb-10">
+        <x-auth.heading title="Forgot password?" description="Enter the email you registered with and we'll send you a link to choose a new password." />
+
+        <x-auth.field wire:model="email" name="email" label="Email" type="email" required autofocus placeholder="you@example.com" />
+
+        <x-auth.button>{{ __('Email password reset link') }}</x-auth.button>
+
+        <x-auth.status tone="info" :status="session('status')" />
+
+        <p class="text-center text-[15px] text-gray-700">Remembered it? <a href="{{ route('login') }}" wire:navigate class="font-semibold text-[#B0102A] hover:text-[#7F0B1E]">Back to log in</a></p>
+    </form>
 </div>

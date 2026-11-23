@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Staff sign in — BOC Visa Portal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#B0102A}a:hover{color:#7F0B1E}
+input::placeholder{color:#6B7280}
+</style>
+</helmet>
+<div style="min-height: 800px; box-sizing: border-box; background: #F6F6F7; font-family: Inter, system-ui, sans-serif; color: #111827; display: flex; flex-wrap: wrap">
+
+  <div style="flex: 1 1 420px; box-sizing: border-box; background: {{accent}}; color: #FFFFFF; padding: 56px 48px; display: flex; flex-direction: column; gap: 24px; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+      <div style="background: #FFFFFF; border-radius: 16px; padding: 12px 16px">
+        <img src="/images/boc-logo.png" alt="Bahrain Olympic Committee" style="height: 96px; width: auto; display: block">
+      </div>
+      <h1 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 36px; line-height: 1.15; max-width: 420px">Visa Portal<br>Staff panel</h1>
+      <p style="margin: 0; font-size: 16px; line-height: 1.55; max-width: 420px; color: #FFE4E6">For BOC administrators, visa processors and finance. Applicants sign in on the public portal.</p>
+    </div>
+    <p style="margin: 0; font-size: 13px; color: #FFE4E6">Access is restricted and monitored.</p>
+  </div>
+
+  <div style="flex: 999 1 480px; min-width: 0; box-sizing: border-box; padding: 56px 24px; display: flex; align-items: center; justify-content: center">
+    <form style="width: 100%; max-width: 400px; background: #FFFFFF; border: 1px solid #E5E7EB; border-radius: 20px; padding: 32px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <h2 style="margin: 0; font-family: Manrope, Inter, sans-serif; font-weight: 800; font-size: 24px">Sign in</h2>
+        <p style="margin: 0; font-size: 14px; color: #4B5563">Use your staff account.</p>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="semail" style="font-size: 14px; font-weight: 600">Email</label>
+        <input id="semail" type="email" placeholder="name@boc.bh" style="height: 46px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 15px; color: #111827">
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <label for="spw" style="font-size: 14px; font-weight: 600">Password</label>
+        <input id="spw" type="password" placeholder="Your password" style="height: 46px; box-sizing: border-box; padding: 0 14px; border: 1px solid #D1D5DB; border-radius: 10px; font: inherit; font-size: 15px; color: #111827">
+      </div>
+      <label style="display: flex; align-items: center; gap: 10px; font-size: 14px; color: #374151; min-height: 44px">
+        <input type="checkbox" style="width: 18px; height: 18px; accent-color: #C8102E; margin: 0">
+        Remember me
+      </label>
+      <button type="submit" style="height: 48px; border: 0; border-radius: 12px; background: {{accent}}; color: #FFFFFF; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Sign in</button>
+
+      <div style="border-top: 1px solid #E5E7EB; padding-top: 16px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 13px; font-weight: 600; color: #374151">Then: two-step verification</span>
+        <div style="display: flex; gap: 8px" aria-hidden="true">
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+          <span style="flex: 1; height: 44px; border: 1px solid #D1D5DB; border-radius: 10px"></span>
+        </div>
+        <span style="font-size: 12px; color: #4B5563">Enter the 6-digit code from your authenticator app.</span>
+      </div>
+    </form>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8102E","options":["#C8102E","#B0102A","#9F1239"]},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { accent: this.props.accent ?? '#C8102E' };
+  }
+}
+</script>
+</body>
+</html>

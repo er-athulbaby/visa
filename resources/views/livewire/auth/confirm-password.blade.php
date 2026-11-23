@@ -32,30 +32,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
     }
 }; ?>
 
-<div class="flex flex-col gap-6">
-    <x-auth-header
-        title="Confirm password"
-        description="This is a secure area of the application. Please confirm your password before continuing."
-    />
+<div class="flex flex-1 flex-col">
+    <x-auth.brand :name="false" />
 
-    <!-- Session Status -->
-    <x-auth-session-status class="text-center" :status="session('status')" />
+    <form wire:submit="confirmPassword" class="flex flex-col gap-5 px-6 pt-7 pb-10">
+        <x-auth.heading title="Confirm password" description="This is a secure area of the application. Please confirm your password before continuing." />
 
-    <form wire:submit="confirmPassword" class="flex flex-col gap-6">
-        <!-- Password -->
-        <div class="grid gap-2">
-            <flux:input
-                wire:model="password"
-                id="password"
-                label="{{ __('Password') }}"
-                type="password"
-                name="password"
-                required
-                autocomplete="new-password"
-                placeholder="Password"
-            />
-        </div>
+        <x-auth.field wire:model="password" name="password" label="Password" type="password" required autocomplete="current-password" placeholder="Password" />
 
-        <flux:button variant="primary" type="submit" class="w-full">{{ __('Confirm') }}</flux:button>
+        <x-auth.button>{{ __('Confirm') }}</x-auth.button>
     </form>
 </div>
