@@ -82,15 +82,13 @@ class ApplicantForm extends Component
         $this->ocrRaw = null;
         $this->ocrMessage = null;
         $this->validateOnly('passportScan');
-
-        $this->ocrMessage = $this->isPdf() ? 'PDF uploaded. Please fill in the details.' : null;
     }
 
     public function readPassport(): void
     {
         $this->validateOnly('passportScan');
 
-        if (! $this->passportScan || $this->isPdf()) {
+        if (! $this->passportScan) {
             return;
         }
 
@@ -105,11 +103,6 @@ class ApplicantForm extends Component
         $this->ocrRaw = $result;
         $this->form = array_merge($this->form, array_filter($result));
         $this->ocrMessage = 'Passport read. Please check every field.';
-    }
-
-    private function isPdf(): bool
-    {
-        return $this->passportScan?->getMimeType() === 'application/pdf';
     }
 
     /** @return array{0: ?string, 1: ?string} region and national number from an E.164 string */

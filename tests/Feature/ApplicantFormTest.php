@@ -183,13 +183,18 @@ it('forbids creating after the event closed', function () {
         ->set(validContact())->call('save')->assertForbidden();
 });
 
-it('skips OCR for a PDF passport', function () {
-    $this->mock(PassportOcr::class)->shouldNotReceive('read');
+it('reads a PDF passport when asked, like a photo', function () {
+    $ocr = $this->mock(PassportOcr::class);
+    $ocr->shouldReceive('read')->once()->andReturn(['passport_number' => 'L898902C3', 'full_name' => 'ANNA MARIA ERIKSSON']);
 
     Livewire::actingAs($this->user)
         ->test(ApplicantForm::class, ['event' => $this->event])
         ->set('passportScan', UploadedFile::fake()->create('passport.pdf', 100, 'application/pdf'))
-        ->assertSet('ocrMessage', 'PDF uploaded. Please fill in the details.');
+        ->assertSet('ocrMessage', null)
+        ->assertSee('Read details from passport')
+        ->call('readPassport')
+        ->assertSet('form.passport_number', 'L898902C3')
+        ->assertSet('ocrMessage', 'Passport read. Please check every field.');
 });
 
 it('does not let the client write ocrRaw', function () {
