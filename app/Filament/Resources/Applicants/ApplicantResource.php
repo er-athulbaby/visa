@@ -15,6 +15,7 @@ use Filament\Actions\ViewAction;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
@@ -79,22 +80,46 @@ class ApplicantResource extends Resource
 
     public static function zipDocuments(Collection $records)
     {
+        if ($records->count() > 100) {
+            Notification::make()->title('Select at most 100 applications per download.')->warning()->send();
+
+            return null;
+        }
+
         $disk = Storage::disk(config('visa.disk'));
         $zipPath = tempnam(sys_get_temp_dir(), 'docs');
-        $zip = new ZipArchive;
-        $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+        $keep = false;
 
-        foreach ($records as $a) {
-            $folder = Str::slug($a->full_name).'-'.$a->passport_number;
-            foreach (['passport' => $a->passport_scan_path, 'photo' => $a->photo_path] as $kind => $path) {
-                if ($path && $disk->exists($path)) {
-                    $zip->addFromString("{$folder}/{$kind}.".pathinfo($path, PATHINFO_EXTENSION), $disk->get($path));
+        try {
+            $zip = new ZipArchive;
+            $zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE);
+
+            foreach ($records as $a) {
+                $folder = Str::slug($a->full_name).'-'.Str::slug($a->passport_number);
+                foreach (['passport' => $a->passport_scan_path, 'photo' => $a->photo_path] as $kind => $path) {
+                    if ($path && $disk->exists($path)) {
+                        $zip->addFromString("{$folder}/{$kind}.".pathinfo($path, PATHINFO_EXTENSION), $disk->get($path));
+                    }
                 }
             }
-        }
-        $zip->close();
 
-        return response()->download($zipPath, 'applicant-documents-'.now()->format('Ymd-His').'.zip')->deleteFileAfterSend();
+            $empty = $zip->numFiles === 0;
+            $zip->close();
+
+            if ($empty) {
+                Notification::make()->title('No documents to download')->warning()->send();
+
+                return null;
+            }
+
+            $keep = true;
+
+            return response()->download($zipPath, 'applicant-documents-'.now()->format('Ymd-His').'.zip')->deleteFileAfterSend();
+        } finally {
+            if (! $keep) {
+                @unlink($zipPath);
+            }
+        }
     }
 
     public static function infolist(Schema $schema): Schema
