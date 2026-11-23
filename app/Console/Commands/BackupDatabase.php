@@ -17,20 +17,28 @@ class BackupDatabase extends Command
         $db = config('database.connections.mysql');
         $file = storage_path('app/backup-'.now()->format('Ymd-His').'.sql.gz');
 
-        $result = Process::env(['MYSQL_PWD' => $db['password']])->timeout(600)->run(sprintf(
-            'mysqldump --single-transaction --quick -h %s -u %s %s | gzip > %s',
-            escapeshellarg($db['host']), escapeshellarg($db['username']), escapeshellarg($db['database']), escapeshellarg($file),
-        ));
+        try {
+            touch($file);
+            chmod($file, 0600); // plaintext PII dump: owner-only before any data lands in it
 
-        if ($result->failed()) {
-            $this->error($result->errorOutput());
+            $result = Process::env(['MYSQL_PWD' => $db['password']])->timeout(600)->run(['bash', '-o', 'pipefail', '-c', sprintf(
+                'mysqldump --single-transaction --quick -h %s -u %s %s | gzip > %s',
+                escapeshellarg($db['host']), escapeshellarg($db['username']), escapeshellarg($db['database']), escapeshellarg($file),
+            )]);
 
-            return self::FAILURE;
+            if ($result->failed() || ! is_file($file) || filesize($file) <= 100) {
+                $this->error($result->errorOutput() ?: 'Backup dump is missing or truncated.');
+
+                return self::FAILURE;
+            }
+
+            Storage::disk('backups')->putFileAs('mysql', $file, basename($file));
+
+            return self::SUCCESS;
+        } finally {
+            if (is_file($file)) {
+                unlink($file);
+            }
         }
-
-        Storage::disk('backups')->putFileAs('mysql', $file, basename($file));
-        unlink($file);
-
-        return self::SUCCESS;
     }
 }

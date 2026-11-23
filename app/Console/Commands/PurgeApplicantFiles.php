@@ -21,7 +21,12 @@ class PurgeApplicantFiles extends Command
             ->whereHas('event', fn ($q) => $q->whereDate('end_date', '<', $cutoff))
             ->where(fn ($q) => $q->whereNotNull('passport_scan_path')->orWhereNotNull('photo_path'))
             ->each(function (Applicant $applicant) use ($disk) {
-                $disk->delete(array_filter([$applicant->passport_scan_path, $applicant->photo_path]));
+                $paths = array_filter([$applicant->passport_scan_path, $applicant->photo_path]);
+                if (! $disk->delete($paths)) {
+                    report(new \RuntimeException("Could not delete files for applicant {$applicant->id}"));
+
+                    return; // keep the paths so the next run retries
+                }
                 $applicant->forceFill(['passport_scan_path' => null, 'photo_path' => null])->save();
             });
 

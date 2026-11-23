@@ -23,21 +23,26 @@ class ReconcilePayments extends Command
         Payment::query()
             ->where('status', PaymentStatus::Initiated)
             ->where('created_at', '<=', now()->subMinutes(5))
+            ->lazyById()
             ->each(function (Payment $payment) use ($tap, $payments, $timeout) {
-                $charge = [];
-                if ($payment->tap_charge_id) {
-                    try {
-                        $charge = $tap->retrieveCharge($payment->tap_charge_id);
-                    } catch (RequestException|ConnectionException $e) {
-                        report($e);
+                try {
+                    $charge = [];
+                    if ($payment->tap_charge_id) {
+                        try {
+                            $charge = $tap->retrieveCharge($payment->tap_charge_id);
+                        } catch (RequestException|ConnectionException $e) {
+                            report($e);
 
-                        return; // try again next run
+                            return; // try again next run
+                        }
+                        $payments->syncFromCharge($payment, $charge);
                     }
-                    $payments->syncFromCharge($payment, $charge);
-                }
 
-                if ($payment->fresh()->status === PaymentStatus::Initiated && $payment->created_at->lte($timeout)) {
-                    $payments->markFailed($payment, $charge);
+                    if ($payment->fresh()->status === PaymentStatus::Initiated && $payment->created_at->lte($timeout)) {
+                        $payments->markFailed($payment, $charge);
+                    }
+                } catch (\Throwable $e) {
+                    report($e); // one bad payment must not abort the batch
                 }
             });
 
