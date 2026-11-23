@@ -17,6 +17,14 @@
     # composer: https://getcomposer.org/download/ ; node 20 for the build
     # php8.3-redis is required because QUEUE_CONNECTION, CACHE_STORE and SESSION_DRIVER are all redis.
 
+## PHP upload limits
+Passport scans and photos are up to 5 MB; PHP's default (2 MB) silently drops them ("failed to upload").
+
+    printf 'upload_max_filesize = 10M\npost_max_size = 12M\n' | sudo tee /etc/php/8.3/fpm/conf.d/99-visa-uploads.ini
+    sudo systemctl restart php8.3-fpm
+
+(nginx's `client_max_body_size 12M` in deploy/nginx.conf already matches.)
+
 ## MySQL (localhost only)
     sudo mysql -e "CREATE DATABASE visa; CREATE USER 'visa'@'localhost' IDENTIFIED BY '<strong>'; GRANT ALL ON visa.* TO 'visa'@'localhost';"
     # /etc/mysql/mysql.conf.d/mysqld.cnf → bind-address = 127.0.0.1
