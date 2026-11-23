@@ -9,6 +9,10 @@ return [
 
     'tesseract_path' => env('TESSERACT_PATH', 'tesseract'),
 
+    // Passport-trained model (BSD-3, DoubangoTelecom/tesseractMRZ) shipped in resources/tessdata.
+    'tesseract_lang' => env('TESSERACT_LANG', 'mrz'),
+    'tessdata_dir' => env('TESSDATA_DIR', resource_path('tessdata')),
+
     'tap' => [
         'secret_key' => env('TAP_SECRET_KEY'),
         'base_url' => env('TAP_BASE_URL', 'https://api.tap.company/v2'),
