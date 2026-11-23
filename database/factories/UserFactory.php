@@ -29,7 +29,23 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => \App\Enums\Role::Applicant,
         ];
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['role' => \App\Enums\Role::Admin]);
+    }
+
+    public function processor(): static
+    {
+        return $this->state(['role' => \App\Enums\Role::Processor]);
+    }
+
+    public function finance(): static
+    {
+        return $this->state(['role' => \App\Enums\Role::Finance]);
     }
 
     /**

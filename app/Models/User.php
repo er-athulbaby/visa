@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Role;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
-class User extends Authenticatable // implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -22,6 +24,8 @@ class User extends Authenticatable // implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'role',
+        'is_active',
     ];
 
     /**
@@ -44,7 +48,24 @@ class User extends Authenticatable // implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => Role::class,
+            'is_active' => 'boolean',
         ];
+    }
+
+    public function hasRole(Role ...$roles): bool
+    {
+        return in_array($this->role, $roles, true);
+    }
+
+    public function applicants(): HasMany
+    {
+        return $this->hasMany(Applicant::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
     }
 
     /**
