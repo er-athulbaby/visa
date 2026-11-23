@@ -13,6 +13,9 @@ return [
     'tesseract_lang' => env('TESSERACT_LANG', 'mrz'),
     'tessdata_dir' => env('TESSDATA_DIR', resource_path('tessdata')),
 
+    // Poppler's pdftoppm turns page 1 of a PDF passport scan into an image for OCR.
+    'pdftoppm_path' => env('PDFTOPPM_PATH', 'pdftoppm'),
+
     'tap' => [
         'secret_key' => env('TAP_SECRET_KEY'),
         'base_url' => env('TAP_BASE_URL', 'https://api.tap.company/v2'),

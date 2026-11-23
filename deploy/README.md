@@ -11,8 +11,8 @@
 6. Data Lifecycle Manager: daily EBS snapshot policy, keep 7.
 
 ## Server packages
-    # Passport OCR uses the bundled MRZ model in resources/tessdata (no extra language packs needed).
-    sudo apt update && sudo apt install -y nginx mysql-server redis-server tesseract-ocr supervisor certbot python3-certbot-nginx unzip git \
+    # Passport OCR uses the bundled MRZ model in resources/tessdata; poppler-utils (pdftoppm) lets it read PDF scans.
+    sudo apt update && sudo apt install -y nginx mysql-server redis-server tesseract-ocr poppler-utils supervisor certbot python3-certbot-nginx unzip git \
       php8.3-fpm php8.3-cli php8.3-mysql php8.3-mbstring php8.3-xml php8.3-curl php8.3-zip php8.3-gd php8.3-intl php8.3-bcmath php8.3-redis
     # composer: https://getcomposer.org/download/ ; node 20 for the build
     # php8.3-redis is required because QUEUE_CONNECTION, CACHE_STORE and SESSION_DRIVER are all redis.

@@ -38,11 +38,9 @@
                 </div>
                 <x-file-upload id="passportScan" wire:model="passportScan" accept=".jpg,.jpeg,.png,.pdf" :file="$passportScan" label="Passport bio page (JPG, PNG or PDF, max 5 MB)" hint="Tap to choose a photo or scan of the passport page with your picture" />
                 @if ($passportScan)
-                    @if ($passportScan->getMimeType() !== 'application/pdf')
-                        <button type="button" wire:click="readPassport" wire:loading.attr="disabled" wire:target="readPassport" class="flex h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-[#C8102E] bg-white text-[15px] font-bold text-[#9F1239]">
-                            Read details from passport
-                        </button>
-                    @endif
+                    <button type="button" wire:click="readPassport" wire:loading.attr="disabled" wire:target="readPassport" class="flex h-12 items-center justify-center gap-2 rounded-xl border-[1.5px] border-[#C8102E] bg-white text-[15px] font-bold text-[#9F1239]">
+                        Read details from passport
+                    </button>
                 @endif
                 <div wire:loading wire:target="passportScan,readPassport" class="text-sm text-gray-500">Reading passport…</div>
                 @if ($ocrMessage)

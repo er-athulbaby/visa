@@ -58,6 +58,50 @@ it('reads a cleaned-up copy of the photo first, then falls back to the original'
     unlink($photo);
 });
 
+function fakePdf(): string
+{
+    $pdf = tempnam(sys_get_temp_dir(), 'pp').'.pdf';
+    file_put_contents($pdf, "%PDF-1.4\n%fake\n");
+
+    return $pdf;
+}
+
+it('turns the first page of a PDF into an image, then reads it', function () {
+    $pdf = fakePdf();
+    $rendered = null;
+
+    Process::fake(function ($process) use (&$rendered) {
+        if ($process->command[0] === config('visa.pdftoppm_path')) {
+            $rendered = end($process->command).'.png';   // pdftoppm -singlefile writes <prefix>.png
+            $img = imagecreatetruecolor(400, 300);
+            imagepng($img, $rendered);
+
+            return Process::result();
+        }
+
+        return Process::result(output: "P<UTOERIKSSON<<ANNA<MARIA<<<<<<<<<<<<<<<<<<<\nL898902C36UTO7408122F1204159ZE184226B<<<<<10\n");
+    });
+
+    $result = app(PassportOcr::class)->read($pdf);
+
+    expect($result['passport_number'])->toBe('L898902C3');
+    Process::assertRan(fn ($p) => $p->command[0] === config('visa.pdftoppm_path')
+        && in_array('-singlefile', $p->command, true) && in_array($pdf, $p->command, true));
+    Process::assertRan(fn ($p) => $p->command[0] === config('visa.tesseract_path') && $p->command[1] !== $pdf);
+    expect(file_exists($rendered))->toBeFalse(); // rendered page cleaned up
+
+    unlink($pdf);
+});
+
+it('returns null for a PDF when pdftoppm is not available', function () {
+    $pdf = fakePdf();
+    Process::fake(fn () => throw new RuntimeException('pdftoppm not found'));
+
+    expect(app(PassportOcr::class)->read($pdf))->toBeNull();
+
+    unlink($pdf);
+});
+
 it('returns null when tesseract fails', function () {
     Process::fake(['*' => Process::result(exitCode: 1, errorOutput: 'boom')]);
 

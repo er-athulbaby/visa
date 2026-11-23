@@ -8,7 +8,26 @@ class PassportOcr
 {
     public function __construct(private MrzParser $parser) {}
 
-    public function read(string $absoluteImagePath): ?array
+    /** Reads a passport photo/scan (JPG, PNG, or the first page of a PDF). */
+    public function read(string $absolutePath): ?array
+    {
+        if (@mime_content_type($absolutePath) !== 'application/pdf') {
+            return $this->readImage($absolutePath);
+        }
+
+        $page = $this->renderFirstPdfPage($absolutePath);
+        if ($page === null) {
+            return null;
+        }
+
+        try {
+            return $this->readImage($page);
+        } finally {
+            @unlink($page);
+        }
+    }
+
+    private function readImage(string $absoluteImagePath): ?array
     {
         $cleaned = $this->cleanUp($absoluteImagePath);
 
@@ -30,6 +49,33 @@ class PassportOcr
                 @unlink($cleaned);
             }
         }
+    }
+
+    /** Renders page 1 at 300 dpi with Poppler's pdftoppm; returns a temp PNG path or null. */
+    private function renderFirstPdfPage(string $pdf): ?string
+    {
+        $prefix = tempnam(sys_get_temp_dir(), 'pdf');
+        @unlink($prefix); // pdftoppm writes <prefix>.png
+
+        try {
+            $result = Process::timeout(30)->run([
+                config('visa.pdftoppm_path'), '-png', '-r', '300', '-f', '1', '-l', '1', '-singlefile', $pdf, $prefix,
+            ]);
+        } catch (\Throwable $e) {
+            report($e); // Poppler missing: fall back to manual entry
+
+            return null;
+        }
+
+        $png = $prefix.'.png';
+        if ($result->failed() || ! is_file($png)) {
+            report(new \RuntimeException('pdftoppm failed: '.$result->errorOutput()));
+            @unlink($png);
+
+            return null;
+        }
+
+        return $png;
     }
 
     private function tesseract(string $image): ?string
