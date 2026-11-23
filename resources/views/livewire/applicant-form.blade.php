@@ -8,8 +8,8 @@
     $upload = 'mt-2 block w-full text-sm file:mr-3 file:h-11 file:rounded-xl file:border file:border-gray-300 file:bg-white file:px-4 file:font-semibold';
 @endphp
 
-<div class="min-h-screen bg-[#F6F6F7] font-sans text-gray-900">
-    <header class="flex items-center gap-1 border-b border-gray-200 bg-white py-2 pr-2 pl-1">
+<div class="font-sans text-gray-900">
+    <header class="mx-auto flex max-w-2xl items-center gap-1 px-2 pt-4">
         <a href="{{ route('dashboard') }}" wire:navigate aria-label="Back to dashboard" class="flex size-11 items-center justify-center text-gray-900">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
         </a>
@@ -139,9 +139,9 @@
                                 @endforeach
                             </select>
                             <label for="{{ $key }}Number" class="sr-only">{{ $text }} number</label>
-                            <input id="{{ $key }}Number" type="tel" inputmode="numeric" wire:model="{{ $key }}Number" class="{{ $input }} flex-1">
+                            <input id="{{ $key }}Number" type="tel" inputmode="tel" wire:model="{{ $key }}Number" @error("{$key}Number") aria-invalid="true" aria-describedby="{{ $key }}Number-error" @enderror class="{{ $input }} flex-1">
                         </div>
-                        @error("{$key}Number") <p class="{{ $err }}">{{ $message }}</p> @enderror
+                        @error("{$key}Number") <p id="{{ $key }}Number-error" class="{{ $err }}">{{ $message }}</p> @enderror
                     </fieldset>
                 @endforeach
 
@@ -176,10 +176,10 @@
 
             <div>
                 <label class="flex cursor-pointer items-start gap-3 rounded-[14px] border border-gray-200 bg-white px-4 py-3.5 text-sm leading-normal text-gray-700">
-                    <input type="checkbox" wire:model="confirmed" class="mt-px size-[22px] flex-none accent-[#C8102E]">
+                    <input type="checkbox" wire:model="confirmed" @error('confirmed') aria-invalid="true" aria-describedby="confirmed-error" @enderror class="mt-px size-[22px] flex-none accent-[#C8102E]">
                     <span>I confirm the details above match the passport and are correct. I understand wrong details can delay or cancel the visa.</span>
                 </label>
-                @error('confirmed') <p class="mt-1 {{ $err }}">{{ $message }}</p> @enderror
+                @error('confirmed') <p id="confirmed-error" class="mt-1 {{ $err }}">{{ $message }}</p> @enderror
             </div>
 
             <button type="submit" wire:loading.attr="disabled" class="h-[52px] rounded-xl bg-[#C8102E] text-base font-bold text-white hover:bg-[#B0102A] disabled:opacity-60">

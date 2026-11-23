@@ -79,9 +79,10 @@ class ApplicantForm extends Component
 
     public function updatedPassportScan(): void
     {
+        $this->ocrRaw = null;
+        $this->ocrMessage = null;
         $this->validateOnly('passportScan');
 
-        $this->ocrRaw = null;
         $this->ocrMessage = $this->isPdf() ? 'PDF uploaded. Please fill in the details.' : null;
     }
 
@@ -238,11 +239,15 @@ class ApplicantForm extends Component
 
     private function phoneCodes(): array
     {
-        $util = PhoneNumberUtil::getInstance();
-        $regions = array_filter($util->getSupportedRegions(), fn ($r) => strlen($r) === 2);
-        sort($regions);
+        static $codes = null;
 
-        return array_map(fn ($r) => ['region' => $r, 'label' => $r.' +'.$util->getCountryCodeForRegion($r)], $regions);
+        return $codes ??= (function () {
+            $util = PhoneNumberUtil::getInstance();
+            $regions = array_filter($util->getSupportedRegions(), fn ($r) => strlen($r) === 2);
+            sort($regions);
+
+            return array_map(fn ($r) => ['region' => $r, 'label' => $r.' +'.$util->getCountryCodeForRegion($r)], $regions);
+        })();
     }
 
     public function render()

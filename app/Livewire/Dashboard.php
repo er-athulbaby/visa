@@ -57,11 +57,21 @@ class Dashboard extends Component
     public function render()
     {
         $user = auth()->user();
+        $applicantsByEvent = $user->applicants()->with('event')->latest()->get()->groupBy('event_id');
+
+        // Per event: how many draft applicants are ticked and what they cost.
+        $selection = $applicantsByEvent->map(function ($applicants) {
+            $count = $applicants->where('status', ApplicantStatus::Draft)->whereIn('id', $this->selected)->count();
+            $event = $applicants->first()->event;
+
+            return ['count' => $count, 'total' => $event->currency.' '.number_format($count * $event->visa_fee, 3)];
+        });
 
         return view('livewire.dashboard', [
             'events' => Event::acceptingApplications()->orderBy('start_date')->get(),
-            'applicantsByEvent' => $user->applicants()->with('event')->latest()->get()->groupBy('event_id'),
-            'payments' => $user->payments()->with(['event', 'invoices'])->latest()->get(),
+            'applicantsByEvent' => $applicantsByEvent,
+            'selection' => $selection,
+            'payments' => $user->payments()->with(['event', 'invoices'])->withCount('applicants')->latest()->get(),
         ]);
     }
 }
