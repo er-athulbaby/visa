@@ -3,15 +3,6 @@
 use App\Models\Payment;
 use App\Services\TapClient;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
-
-beforeEach(function () {
-    // Routes are added in Task 10; register stubs so route() resolves here.
-    Route::post('/webhooks/tap', fn () => null)->name('tap.webhook');
-    Route::get('/checkout/{payment}/return', fn () => null)->name('checkout.return');
-    // Fluent ->name() is not indexed until the name lookup table is refreshed.
-    app('router')->getRoutes()->refreshNameLookups();
-});
 
 it('creates a charge with the payment amount and redirect urls', function () {
     Http::fake(['api.tap.company/v2/charges' => Http::response(['id' => 'chg_1', 'transaction' => ['url' => 'https://checkout.tap.company/x']])]);

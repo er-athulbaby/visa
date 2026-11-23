@@ -2,8 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Enums\ApplicantStatus;
 use App\Models\Applicant;
 use App\Models\Event;
+use App\Services\PaymentService;
+use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -20,6 +24,33 @@ class Dashboard extends Component
 
         Storage::disk(config('visa.disk'))->delete(array_filter([$applicant->passport_scan_path, $applicant->photo_path]));
         $applicant->delete();
+    }
+
+    public function pay(int $eventId, PaymentService $payments)
+    {
+        $event = Event::findOrFail($eventId);
+        $applicants = auth()->user()->applicants()
+            ->whereIn('id', $this->selected)
+            ->where('event_id', $event->id)
+            ->where('status', ApplicantStatus::Draft)
+            ->get();
+
+        if ($applicants->isEmpty()) {
+            $this->addError('selected', 'Tick at least one draft applicant for this event.');
+
+            return null;
+        }
+
+        try {
+            return $this->redirect($payments->start(auth()->user(), $event, $applicants));
+        } catch (RequestException|ConnectionException $e) {
+            report($e);
+            $this->addError('selected', 'The payment gateway is unavailable. Please try again in a few minutes.');
+        } catch (\InvalidArgumentException $e) {
+            $this->addError('selected', $e->getMessage());
+        }
+
+        return null;
     }
 
     public function render()

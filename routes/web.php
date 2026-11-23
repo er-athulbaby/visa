@@ -24,7 +24,10 @@ Route::middleware(['auth'])->group(function () {
     Volt::route('settings/appearance', 'settings.appearance')->name('settings.appearance');
 });
 
+Route::post('/webhooks/tap', \App\Http\Controllers\TapWebhookController::class)->name('tap.webhook');
+
 Route::middleware('auth')->group(function () {
+    Route::get('/checkout/{payment}/return', \App\Http\Controllers\CheckoutReturnController::class)->name('checkout.return');
     Route::get('/invoices/{invoice}', \App\Http\Controllers\InvoiceDownloadController::class)->name('invoices.download');
     Route::get('/files/applicants/{applicant}/{kind}', ApplicantFileController::class)
         ->whereIn('kind', ['passport', 'photo', 'visa'])
