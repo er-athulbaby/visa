@@ -37,6 +37,7 @@ class ApplicantForm extends Component
 
     public ?string $ocrMessage = null;
 
+    #[Locked]
     public ?array $ocrRaw = null;
 
     public function mount(?Event $event = null, ?Applicant $applicant = null): void
@@ -63,6 +64,7 @@ class ApplicantForm extends Component
         $this->validateOnly('passportScan');
 
         if ($this->passportScan->getMimeType() === 'application/pdf') {
+            $this->ocrRaw = null;
             $this->ocrMessage = 'PDF uploaded. Please fill in the details.';
 
             return;
@@ -114,6 +116,13 @@ class ApplicantForm extends Component
 
     public function save()
     {
+        if ($this->applicant) {
+            $this->applicant = $this->applicant->fresh();
+            Gate::authorize('update', $this->applicant);
+        } else {
+            abort_unless($this->event->fresh()->isAcceptingApplications(), 403);
+        }
+
         $this->form['passport_number'] = strtoupper(trim((string) ($this->form['passport_number'] ?? '')));
         $this->validate();
 
