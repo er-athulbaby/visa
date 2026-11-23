@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Invoice;
 use App\Models\Payment;
 use App\Notifications\PaymentConfirmed;
 use App\Services\InvoiceService;
@@ -18,7 +19,9 @@ class GenerateInvoice implements ShouldQueue
     {
         $invoice = $invoices->issue($this->payment);
 
-        if ($invoice->wasRecentlyCreated) {
+        $claimed = Invoice::whereKey($invoice->id)->whereNull('emailed_at')->update(['emailed_at' => now()]);
+
+        if ($claimed === 1) {
             $this->payment->user->notify(new PaymentConfirmed($invoice));
         }
     }

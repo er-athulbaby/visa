@@ -13,7 +13,8 @@ class InvoiceService
     public function issue(Payment $payment): Invoice
     {
         return DB::transaction(function () use ($payment) {
-            $existing = $payment->invoices()->where('type', 'invoice')->lockForUpdate()->first();
+            Payment::query()->whereKey($payment->id)->lockForUpdate()->first();
+            $existing = $payment->invoices()->where('type', 'invoice')->first();
             if ($existing) {
                 return $existing;
             }
@@ -27,11 +28,16 @@ class InvoiceService
 
     public function creditNote(Invoice $original): Invoice
     {
-        return DB::transaction(fn () => $original->payment->invoices()->where('type', 'credit_note')->first()
-            ?? $this->create(
-                $original->payment, 'credit_note', config('visa.invoice.prefix').'-CN',
-                (float) $original->subtotal, (float) $original->vat_amount, $original,
-            ));
+        return DB::transaction(function () use ($original) {
+            $payment = $original->payment;
+            Payment::query()->whereKey($payment->id)->lockForUpdate()->first();
+
+            return $payment->invoices()->where('type', 'credit_note')->first()
+                ?? $this->create(
+                    $payment, 'credit_note', config('visa.invoice.prefix').'-CN',
+                    (float) $original->subtotal, (float) $original->vat_amount, $original,
+                );
+        });
     }
 
     private function create(Payment $payment, string $type, string $prefix, float $subtotal, float $vat, ?Invoice $references = null): Invoice

@@ -16,6 +16,7 @@ class Invoice extends Model
             'vat_amount' => 'decimal:3',
             'total' => 'decimal:3',
             'issued_at' => 'datetime',
+            'emailed_at' => 'datetime',
         ];
     }
 
