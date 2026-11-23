@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Enums\ApplicantStatus;
+use App\Exceptions\InvalidStatusTransition;
 use App\Models\Applicant;
 use App\Models\Event;
 use App\Services\PaymentService;
@@ -46,7 +47,7 @@ class Dashboard extends Component
         } catch (RequestException|ConnectionException $e) {
             report($e);
             $this->addError('selected', 'The payment gateway is unavailable. Please try again in a few minutes.');
-        } catch (\InvalidArgumentException $e) {
+        } catch (\InvalidArgumentException|InvalidStatusTransition $e) {
             $this->addError('selected', $e->getMessage());
         }
 

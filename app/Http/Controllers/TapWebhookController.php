@@ -6,6 +6,7 @@ use App\Models\Payment;
 use App\Services\PaymentService;
 use App\Services\TapClient;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TapWebhookController
 {
@@ -18,6 +19,8 @@ class TapWebhookController
         if ($payment) {
             // Trust Tap's API, not the posted body.
             $payments->syncFromCharge($payment, $tap->retrieveCharge($payment->tap_charge_id));
+        } else {
+            Log::warning('Tap webhook for unknown charge', ['id' => $request->input('id')]);
         }
 
         return response()->noContent();

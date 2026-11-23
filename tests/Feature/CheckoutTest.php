@@ -12,6 +12,7 @@ use App\Services\PaymentService;
 use App\Services\TapClient;
 use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Livewire\Livewire;
 
 beforeEach(function () {
@@ -129,4 +130,49 @@ it('refunds a paid payment with a credit note', function () {
 
     expect($payment->fresh()->status)->toBe(PaymentStatus::Refunded)
         ->and($credit->type)->toBe('credit_note');
+});
+
+it('recovers a capture that arrives after the payment was marked failed', function () {
+    Bus::fake([GenerateInvoice::class]);
+    $payment = startedPayment($this);
+    $service = app(PaymentService::class);
+    $service->syncFromCharge($payment, ['status' => 'DECLINED']);
+
+    $service->syncFromCharge($payment->fresh(), ['status' => 'CAPTURED']);
+    $service->syncFromCharge($payment->fresh(), ['status' => 'CAPTURED']);
+
+    expect($payment->fresh()->status)->toBe(PaymentStatus::Paid)
+        ->and($this->drafts->first()->fresh()->status)->toBe(ApplicantStatus::Submitted)
+        ->and($this->drafts->last()->fresh()->status)->toBe(ApplicantStatus::Submitted);
+    Bus::assertDispatchedTimes(GenerateInvoice::class, 1);
+});
+
+it('logs critical when a late capture covers applicants already in another payment', function () {
+    Bus::fake([GenerateInvoice::class]);
+    $payment = startedPayment($this);
+    $service = app(PaymentService::class);
+    $service->syncFromCharge($payment, ['status' => 'DECLINED']);
+    $other = $this->drafts->last()->fresh();
+    $other->transitionTo(ApplicantStatus::PendingPayment, $this->user);
+    Log::spy();
+
+    $service->syncFromCharge($payment->fresh(), ['status' => 'CAPTURED']);
+
+    expect($payment->fresh()->status)->toBe(PaymentStatus::Paid)
+        ->and($this->drafts->first()->fresh()->status)->toBe(ApplicantStatus::Submitted)
+        ->and($other->fresh()->status)->toBe(ApplicantStatus::PendingPayment);
+    Log::shouldHaveReceived('critical')->once();
+});
+
+it('trusts the Tap API over the posted webhook body', function () {
+    fakeTap('DECLINED');
+    app(PaymentService::class)->start($this->user, $this->event, $this->drafts);
+    $payment = Payment::sole();
+    $payload = ['id' => 'chg_TEST1', 'amount' => 60, 'currency' => 'BHD', 'status' => 'CAPTURED',
+        'reference' => ['gateway' => 'g', 'payment' => 'p'], 'transaction' => ['created' => '1']];
+
+    $this->postJson(route('tap.webhook'), $payload, ['hashstring' => app(TapClient::class)->signature($payload)])->assertNoContent();
+
+    expect($payment->fresh()->status)->toBe(PaymentStatus::Failed)
+        ->and($this->drafts->first()->fresh()->status)->toBe(ApplicantStatus::Draft);
 });

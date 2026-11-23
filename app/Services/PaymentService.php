@@ -12,6 +12,7 @@ use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PaymentService
 {
@@ -60,10 +61,11 @@ class PaymentService
 
     public function markPaid(Payment $payment, array $charge): void
     {
-        $changed = DB::transaction(function () use ($payment, $charge) {
+        DB::transaction(function () use ($payment, $charge) {
             $locked = Payment::query()->lockForUpdate()->findOrFail($payment->id);
-            if ($locked->status !== PaymentStatus::Initiated) {
-                return false; // already handled — webhook/return/reconcile can all race here
+            $late = $locked->status === PaymentStatus::Failed; // capture arriving after we gave up
+            if ($locked->status !== PaymentStatus::Initiated && ! $late) {
+                return; // already handled — webhook/return/reconcile can all race here
             }
 
             $locked->update([
@@ -72,14 +74,30 @@ class PaymentService
                 'payment_method' => $charge['source']['payment_method'] ?? null,
                 'raw_payload' => $charge,
             ]);
-            $locked->applicants->each->transitionTo(ApplicantStatus::Submitted);
 
-            return true;
+            $skipped = [];
+            foreach ($locked->applicants as $applicant) {
+                // Late: markFailed returned them to draft; anything else is now in another payment.
+                $ours = $applicant->status === ($late ? ApplicantStatus::Draft : ApplicantStatus::PendingPayment);
+                if ($ours && $late) {
+                    $applicant->transitionTo(ApplicantStatus::PendingPayment);
+                }
+                if ($ours) {
+                    $applicant->transitionTo(ApplicantStatus::Submitted);
+                } else {
+                    $skipped[] = $applicant->id;
+                }
+            }
+
+            if ($skipped) {
+                $context = ['charge' => $locked->tap_charge_id, 'payment_id' => $locked->id, 'applicant_ids' => $skipped];
+                $late
+                    ? Log::critical('Late Tap capture covers applicants no longer in draft — refund needed', $context)
+                    : Log::warning('Paid payment has applicants not pending payment', $context);
+            }
+
+            GenerateInvoice::dispatch($locked->fresh())->afterCommit();
         });
-
-        if ($changed) {
-            GenerateInvoice::dispatch($payment->fresh());
-        }
     }
 
     public function markFailed(Payment $payment, array $charge): void
@@ -100,12 +118,15 @@ class PaymentService
     /** Refund itself is done in Tap's dashboard; this records it and issues the credit note. */
     public function markRefunded(Payment $payment, User $by): Invoice
     {
-        if ($payment->status !== PaymentStatus::Paid) {
-            throw new \InvalidArgumentException('Only paid payments can be refunded.');
-        }
+        return DB::transaction(function () use ($payment) {
+            $locked = Payment::query()->lockForUpdate()->findOrFail($payment->id);
+            if ($locked->status !== PaymentStatus::Paid) {
+                throw new \InvalidArgumentException('Only paid payments can be refunded.');
+            }
 
-        $payment->update(['status' => PaymentStatus::Refunded, 'refunded_at' => now()]);
+            $locked->update(['status' => PaymentStatus::Refunded, 'refunded_at' => now()]);
 
-        return $this->invoices->creditNote($this->invoices->issue($payment));
+            return $this->invoices->creditNote($this->invoices->issue($locked));
+        });
     }
 }
